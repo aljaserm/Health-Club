@@ -1,0 +1,703 @@
+package ymca;
+import javax.swing.JOptionPane;
+import java.io.*;
+import java.util.*;
+import java.text.*;
+public class ymca
+{
+  public static void main(String[] args)
+  { 
+	  ymca_info ymca= new ymca_info();
+
+
+    int selection;
+    ymca.start_program();
+    selection=ymca.menu();
+   while(selection !=4)
+    {
+       if(selection==1)
+        ymca.modify_member();
+       else
+            if(selection==2)
+            ymca.Modify_registration();
+            else
+                if(selection==3)
+                 ymca.Report();
+   
+       selection=ymca.menu();  
+    }//while loop
+   ymca.exit_program();
+   System.exit(0);
+  }//main method
+}
+ class ymca_info
+{
+	int count=-1,rcount=-1;
+	int[]code = new int[100];
+	String[]type = new String [100];
+	String[]name = new String [100];
+	int[]age = new int [100];
+	String[]gender = new String[100];
+	double[]payment = new double [100];
+	int [] class_code=new int[100]; 
+	String[]class_type=new String[100];
+
+	void start_program()	
+  {
+    int i,k;    
+	String newLine;
+          try
+          {
+            //define a file variable for Buffered read
+             BufferedReader member_file = new BufferedReader(new FileReader("member.dat"));
+             //read lines in file until there are no more lines in the file to read
+             while ((newLine = member_file.readLine()) != null)
+               {
+                 //there is a "#" between each data item in each line
+                  StringTokenizer delimiter = new StringTokenizer(newLine,"#");
+                  count=count+1;
+                  code[count] = Integer.parseInt(delimiter.nextToken());
+                  name[count] =delimiter.nextToken(); 
+                  type[count] =delimiter.nextToken();
+                   age[count] = Integer.parseInt(delimiter.nextToken());
+                  gender[count] =delimiter.nextToken();
+                  payment[count] = Double.parseDouble(delimiter.nextToken());
+                }//while loop
+               member_file.close();
+               //define a file variable for Buffered read
+               BufferedReader register_file = new BufferedReader(new FileReader("register.dat"));
+               //read lines in file until there are no more lines in the file to read
+               while ((newLine =register_file.readLine()) != null)
+                 {
+                   //there is a "#" between each data item in each line
+                    StringTokenizer delimiter = new StringTokenizer(newLine,"#");
+                    rcount=rcount+1;
+                    class_code[rcount] = Integer.parseInt(delimiter.nextToken()); 
+                    class_type[rcount] =delimiter.nextToken();
+                   
+                  }//while loop
+               register_file.close();
+
+            }//end try
+        catch (IOException error)
+          {
+          System.out.println("Error on file read " + error);
+          }//error on read
+     
+  }
+
+ int menu()
+  {
+    String snum;
+    int selection;
+    String Output =  "Moon Area YMCA" + "\n" +
+          "1. Add/Modify Member Information" + "\n" +
+          "2. Add/Modify Class Registrations " + "\n" +
+          "3. Report Section" + "\n" +
+          "4. Exit the System"+ "\n" +"\n" +
+          "Please make your seleciton";
+        snum = JOptionPane.showInputDialog(null,
+                 Output, "",JOptionPane.QUESTION_MESSAGE);
+        selection = Integer.parseInt(snum);
+    return selection;
+  }
+ 
+ void modify_member()
+  {
+	 String snum, more="yes", value=" ", output=" ",svalue="",mvalue="" ;
+	    int option, position='i', mposition='i', i,delid,modid,modselec;
+	    String Output =  "Member Modification Menu " + "\n" +
+	          "1. Add Member" + "\n" +
+	          "2. Delete Member " + "\n" +
+	          "3. Modify Member" + "\n" +
+	          "4. Exit Modfiy Menu"+ "\n" +"\n" +
+	          "Please make your seleciton";
+	        snum = JOptionPane.showInputDialog(null,
+	                 Output, "",JOptionPane.QUESTION_MESSAGE);
+	        option = Integer.parseInt(snum);
+	        while(option!=4)
+	        {
+	        if (option==1)
+	        	{
+	        	while(more.equalsIgnoreCase("yes"))
+	        	{
+	        		count=count+1;
+	        		output="Enter ID";
+	        		value=JOptionPane.showInputDialog(null,output,"",JOptionPane.QUESTION_MESSAGE);
+	        		code[count]=Integer.parseInt(value);
+	        		output="Enter Name";
+	        		name[count]=JOptionPane.showInputDialog(null,output,"",JOptionPane.QUESTION_MESSAGE);
+	        		output="Enter type";
+	        		type[count]=JOptionPane.showInputDialog(null,output,"",JOptionPane.QUESTION_MESSAGE);
+	        		output="Enter age";
+	        		value=JOptionPane.showInputDialog(null,output,"",JOptionPane.QUESTION_MESSAGE);
+	        		age[count]=Integer.parseInt(value);
+	        		output="Enter Gender";
+	        		gender[count]=JOptionPane.showInputDialog(null,output,"",JOptionPane.QUESTION_MESSAGE);
+	        		output="Enter Payment";
+	        		value=JOptionPane.showInputDialog(null,output,"",JOptionPane.QUESTION_MESSAGE);
+	        		payment[count]=Double.parseDouble(value);
+	        		more=JOptionPane.showInputDialog(null,"Do you want to add another member?","",JOptionPane.QUESTION_MESSAGE);
+	        		
+	        	}
+	        	for(i=0;i<=count;++i)
+	        	{
+	        		System.out.println(code[i]+" "+ name[i]+" "+ type[i]+" "+ age[i]+" "+ gender[i]+" "+ payment[i]);
+	        	}
+	            snum = JOptionPane.showInputDialog(null,
+		                 Output, "",JOptionPane.QUESTION_MESSAGE);
+		        option = Integer.parseInt(snum);
+	        	
+	        }
+	        	else
+	        		if(option==2)
+	        		{
+	        			output="Enter ID to Delete";
+	        			svalue=JOptionPane.showInputDialog(null,output,"",JOptionPane.QUESTION_MESSAGE);
+		        		delid=Integer.parseInt(svalue);
+		        		for(i=0;i<=count;++i)
+		        		{
+		        			if(code[i]==delid)position=i;
+		        		}
+		        		System.out.println("The ID to Delete is"+position);
+		        		for(i=position;i<=count-1;++i)
+		        		{
+		        			code[i]=code[i+1];
+		        			name[i]=name[i+1];
+		        			type[i]=type[i+1];
+		        			age[i]=age[i+1];
+		        			gender[i]=gender[i+1];
+		        			payment[i]=payment[i+1];
+		        		}
+		        		count=count-1;
+		        		for(i=0;i<=count;++i)
+		        		{
+		        			System.out.println(code[i]+" "+ name[i]+" "+ type[i]+" "+ age[i]+" "+ gender[i]+" "+ payment[i]);
+		        		}
+		        		snum = JOptionPane.showInputDialog(null,
+		   	                 Output, "",JOptionPane.QUESTION_MESSAGE);
+		   	        option = Integer.parseInt(snum);
+	        		}
+	        		else
+	        			if(option==3)
+	        			{
+	        				output="Enter ID to Modfiy";
+		        			mvalue=JOptionPane.showInputDialog(null,output,"",JOptionPane.QUESTION_MESSAGE);
+		        			modid=Integer.parseInt(mvalue);
+		        			for(i=0;i<=count;++i)
+		        			{
+		        				if(code[i]==modid)mposition=i;
+		        			}
+		        			output="";
+	        				output=output+"1.Change Type"+"\n"+"2.Change Age"+"\n"+"3.Change Gender"+"\n"+
+	        				"4.Change Payment"+"\n"+"5.Exit Modfiy Menu"+"\n"+"Enter Your Selection";
+	        				mvalue=JOptionPane.showInputDialog(null,output,"",JOptionPane.QUESTION_MESSAGE);
+	        				modselec=Integer.parseInt(mvalue);
+	        				if(modselec==1)
+        					{
+        					output="Enter New Member Type";
+        					type[mposition]=JOptionPane.showInputDialog(null,output,"",JOptionPane.QUESTION_MESSAGE);
+        					}
+        				else
+        					if(modselec==2)
+        						{
+        						output="Enter New Member Age";
+        						mvalue=JOptionPane.showInputDialog(null,output,"",JOptionPane.QUESTION_MESSAGE);
+	        					age[mposition]=Integer.parseInt(mvalue);
+        						}
+        					else
+        						if(modselec==3)
+        							{
+        							output="Enter New Member Gender";
+    	        					gender[mposition]=JOptionPane.showInputDialog(null,output,"",JOptionPane.QUESTION_MESSAGE);
+        							}
+        						else
+        							if(modselec==4)
+        								{
+        							output="Enter New Member Payment";
+	        						mvalue=JOptionPane.showInputDialog(null,output,"",JOptionPane.QUESTION_MESSAGE);
+		        					payment[mposition]=Double.parseDouble(mvalue);
+        								}
+	        				  snum = JOptionPane.showInputDialog(null,
+	        			                 Output, "",JOptionPane.QUESTION_MESSAGE);
+	        			        option = Integer.parseInt(snum);
+	        			}
+	        
+	        	
+	        }                  
+	        
+	     
+   }
+
+ void Modify_registration()
+  {
+	 String mnum, value=" ", output=" ",svalue="",rmvalue="" ;
+	    int option1, rposition='i', rmposition='i', i = 0,rdelid,rmodid,rmodselec, search_code;
+	    int flag;
+	    String Output =  "Moon area YMCA Modify Registration " + "\n" +
+	          "1. Add Registration" + "\n" +
+	          "2. Delete Registration " + "\n" +
+	          "3. Modify Registration" + "\n" +
+	          "4. Exit Modfiy Registration"+ "\n" +"\n" +
+	          "Please make your seleciton";
+	        mnum = JOptionPane.showInputDialog(null,
+	                 Output, "",JOptionPane.QUESTION_MESSAGE);
+	        option1 = Integer.parseInt(mnum);
+	        while(option1!=4)
+	        {
+	        	if(option1==1)
+	        	{
+	        		flag=0;
+	        		output=" Enter The Member ID";
+	   	              value= JOptionPane.showInputDialog(null,
+	 	   	                 output, "",JOptionPane.QUESTION_MESSAGE);
+	        		search_code=Integer.parseInt(value);
+	        			for(i=0;i<=count;++i)
+	        			{
+	        				if(search_code==code[i] )
+	        				{
+	        					flag=1;
+	        					rcount=rcount+1;	
+	        					class_code[rcount]=search_code;
+	        					output="Enter Class Name";
+	        					class_type[rcount]=JOptionPane.showInputDialog(null,output,"",JOptionPane.QUESTION_MESSAGE);
+			        		
+	        				}
+	        			}
+	        			if(flag==0)
+	        			JOptionPane.showMessageDialog(null,
+	        				      "The ID is not found" ,"Output:",JOptionPane.INFORMATION_MESSAGE);
+		        	for(i=0;i<=rcount;++i)
+		        	{
+		        		
+		        		System.out.println(class_code[i]+ " "+ class_type[i]);
+		        	}
+		        
+		        	
+	        	}//END OF OPTION1
+	        	else
+	        		if(option1==2)
+	        		{
+	        			output="Enter ID to Delete";
+	        			svalue=JOptionPane.showInputDialog(null,output,"",JOptionPane.QUESTION_MESSAGE);
+		        		rdelid=Integer.parseInt(svalue);
+		        		for(i=0;i<=rcount;++i)
+		        		{
+		        			if(class_code[i]==rdelid)rposition=i;
+		        		}
+		        		System.out.println("The ID to Delete is"+rposition);
+		        		for(i=rposition;i<=rcount-1;++i)
+		        		{
+		        			class_code[i]=class_code[i+1];
+		        			class_type[i]=class_type[i+1];
+		        		}
+		        		rcount=rcount-1;
+		        		for(i=0;i<=rcount;++i)
+		        		{
+		        			System.out.println(class_code[i]+" "+ class_type[i]);
+		        		}
+		        		
+	        		}
+	        		else
+	        			if(option1==3)
+	        			{
+	        				output="Enter ID to Modfiy";
+		        			rmvalue=JOptionPane.showInputDialog(null,output,"",JOptionPane.QUESTION_MESSAGE);
+		        			rmodid=Integer.parseInt(rmvalue);
+		        			for(i=0;i<=rcount;++i)
+		        			{
+		        				if(class_code[i]==rmodid)rmposition=i;
+		        			}
+		        			output="";
+	        				output=output+"1.Change class Type"+"\n"+"Enter Your Selection";
+	        				rmvalue=JOptionPane.showInputDialog(null,output,"",JOptionPane.QUESTION_MESSAGE);
+	        				rmodselec=Integer.parseInt(rmvalue);
+	        				if(rmodselec==1)
+        					{
+        					output="Enter New class Type";
+        					class_type[rmposition]=JOptionPane.showInputDialog(null,output,"",JOptionPane.QUESTION_MESSAGE);
+        					}
+	        		 		for(i=0;i<=rcount;++i)
+			        		{
+			        			System.out.println(class_code[i]+" "+ class_type[i]);
+			        		}
+	        			
+	        			}
+	        	
+	        	output =  "Moon area YMCA Modify Registration " + "\n" +
+	      	          "1. Add Registration" + "\n" +
+	      	          "2. Delete Registration " + "\n" +
+	      	          "3. Modify Registration" + "\n" +
+	      	          "4. Exit Modfiy Registration"+ "\n" +"\n" +
+	      	          "Please make your seleciton";
+	      	        mnum = JOptionPane.showInputDialog(null,
+	      	                 output, "",JOptionPane.QUESTION_MESSAGE);
+	      	        option1 = Integer.parseInt(mnum);	
+	        }//end while complete
+	}//end reg mod
+  
+ void Report()
+{
+	int selection1,  search,young,old,k,i = 0,ycount=0, kcount=0,aero1count=0,aero2count=0,swim1count=0,swim2count=0; 
+	String snum, search_type, searchold,searchyoung,searchgender,searchclass,searchm;
+	double yoga_fee = 0,k_fee = 0,aero1_fee = 0,aero2_fee=0,swim1_fee=0,swim2_fee=0;
+	
+	
+
+  String Output =  "Moon Area YMCA" + "\n" +
+        "1. All Member Information" + "\n" +
+        "2. All Members of a Specific type " + "\n" +
+        "3. All Members between a specific age range" + "\n" +
+        "4. All Members of a specific gender"+ "\n" +
+        "5. Registration Master Information"+ "\n" +
+        "6. Registration In All Classes"+ "\n" +
+        "7. Registration By Specific Class"+ "\n" +
+        "8. Registration By Specific Member "+ "\n" +
+        "9. Summary Class Information "+ "\n" +
+        "10. Exit Report Menu"+ "\n" +
+        
+        "Please make your seleciton";
+      snum = JOptionPane.showInputDialog(null,
+               Output, "",JOptionPane.QUESTION_MESSAGE);
+      selection1 = Integer.parseInt(snum);
+      while(selection1!=10)
+      {
+      	if (selection1==1)
+      	{
+      		for(i=0; i<=count;++i)
+      		{
+      		System.out.println(code[i]+" "+ name[i]+" "+ type[i]+" "+ age[i]+" "+ gender[i]+" "+ payment[i]);
+      		}//for1
+      	}//select1
+      	else 
+      		if (selection1==2)
+      		{
+      			search_type=JOptionPane.showInputDialog(null,
+      						        "Enter member type 1.Single,2.Couple,3.Family","Input Data",JOptionPane.QUESTION_MESSAGE);
+      			search=Integer.parseInt(search_type);
+      			for(i=0;i<=count;++i)
+      			{
+      				if (search==1)
+      				{
+      					if(type[i].equals("Single"))
+      					{
+      					System.out.println(code[i]+" "+name[i]+" "+type[i]);
+      					}
+      				}
+      				else
+      					if(search==2)
+      					{
+      						if(type[i].equals("Couple"))
+          					{
+          					System.out.println(code[i]+" "+name[i]+" "+type[i]);
+          					}
+              					
+      					}
+      					else
+      						{
+      						if(type[i].equals("Family"))
+          					{
+          					System.out.println(code[i]+" "+name[i]+" "+type[i]);
+          					}
+      						}
+      			}//for2
+      		}//select2
+      		else
+      			if(selection1==3)
+      			{
+      				searchold=JOptionPane.showInputDialog(null,
+						        "Enter the yougest age","Input Data",JOptionPane.QUESTION_MESSAGE);
+      				young=Integer.parseInt(searchold);
+      				
+      				searchyoung=JOptionPane.showInputDialog(null,
+						        "Enter the oldest age","Input Data",JOptionPane.QUESTION_MESSAGE);
+      				old=Integer.parseInt(searchyoung);
+      				
+      				for(i=0;i<=count;++i)
+      				{
+      					if((young<=age[i])&&(old>=age[i]))
+      							{
+      								System.out.println(code[i]+" "+name[i]+" "+age[i]);
+      							}
+      				}
+      			}//select3
+      			else
+      				if(selection1==4)
+      				{
+      					searchgender=JOptionPane.showInputDialog(null,
+  						        "Enter the gender you looking for","Input Data",JOptionPane.QUESTION_MESSAGE);
+      					for(i=0;i<=count;++i)
+      					{
+      						if(searchgender.equalsIgnoreCase(gender[i]))
+      						{
+      							System.out.println(code[i]+" "+name[i]+" "+gender[i]);
+      						}
+      					}
+      				}//selection4
+      				else
+      					if(selection1==5)
+      					{
+      						 for(k=0;k<=rcount;++k)
+      		               {
+      		            	   System.out.println(class_code[k]+" "+class_type[k]);
+      		               }
+      					}//selec5
+      					else
+          					if(selection1==6)
+          					{
+          						System.out.println("The following Members are signed up for Yoga");
+          						for(k=0;k<=rcount;++k)
+          							{
+          							if(class_type[k].equals("Yoga"))
+          							    {
+          								for(i=0;i<=count;++i)
+          							    	{
+          									if(class_code[k]==code[i])
+          							  				System.out.println(name[i]);
+          									}//i loop
+          							     }//if there is a match on Yoga
+          							}//k loop
+          						System.out.println("The following Members are signed up for Karate");
+          						for(k=0;k<=rcount;++k)
+          							{
+          							if(class_type[k].equals("Karate"))
+          							    {
+          								for(i=0;i<=count;++i)
+          							    	{
+          									if(class_code[k]==code[i])
+          							  				System.out.println(name[i]);
+          									}//i loop
+          							     }//if there is a match on kra
+          							}//k loop
+          						System.out.println("The following Members are signed up for Aerobics I");
+          						for(k=0;k<=rcount;++k)
+          							{
+          							if(class_type[k].equals("AerobicsI"))
+          							    {
+          								for(i=0;i<=count;++i)
+          							    	{
+          									if(class_code[k]==code[i])
+          							  				System.out.println(name[i]);
+          									}//i loop
+          							     }//if there is a match on aero1
+          							}//k loop
+          						System.out.println("The following Members are signed up for Aerobics II");
+          						for(k=0;k<=rcount;++k)
+          							{
+          							if(class_type[k].equals("AerobicsII"))
+          							    {
+          								for(i=0;i<=count;++i)
+          							    	{
+          									if(class_code[k]==code[i])
+          							  				System.out.println(name[i]);
+          									}//i loop
+          							     }//if there is a match on aero2
+          							}//k loop
+          						System.out.println("The following Members are signed up for Swimming I ");
+          						for(k=0;k<=rcount;++k)
+          							{
+          							if(class_type[k].equals("SwimmingI"))
+          							    {
+          								for(i=0;i<=count;++i)
+          							    	{
+          									if(class_code[k]==code[i])
+          							  				System.out.println(name[i]);
+          									}//i loop
+          							     }//if there is a match on swim1
+          							}//k loop
+          						System.out.println("The following Members are signed up for Swimming II");
+          						for(k=0;k<=rcount;++k)
+          							{
+          							if(class_type[k].equals("SwimmingII"))
+          							    {
+          								for(i=0;i<=count;++i)
+          							    	{
+          									if(class_code[k]==code[i])
+          							  				System.out.println(name[i]);
+          									}//i loop
+          							     }//if there is a match on swim2
+          							}//k loop
+          					}//selec6
+          					else
+              					if(selection1==7)
+              					{
+              						searchclass=JOptionPane.showInputDialog(null,
+              						        "Enter the class you looking for","Input Data",JOptionPane.QUESTION_MESSAGE);
+              						for(i=0;i<rcount;++i)
+              							{
+              								if(class_type[i].equalsIgnoreCase(searchclass))
+              									{
+              										for(k=0;k<=count;++k)
+              											{
+              												if(code[k]==class_code[i])
+              												{
+              													
+              													System.out.println(name[k]+" "+class_type[i]);
+              											
+              												}
+              											}
+              									}
+              							}
+              					}//selec7
+              					else
+                  					if(selection1==8)
+                  					{
+                  						searchm=JOptionPane.showInputDialog(null,
+                  						        "Enter member Id to see the classes Registration  ","Input Data",JOptionPane.QUESTION_MESSAGE);
+                  						search=Integer.parseInt(searchm);
+                  						for(i=0;i<=count;++i)
+                  						{
+                  							if(search==code[i])
+                  							{
+                  								for(k=0;k<=rcount;++k)
+                  								{
+                  									if(code[i]==class_code[k])
+                  									System.out.println(code[i]+" "+name[i]+" "+class_type[k]);
+                  								}
+                  							}
+                  						}
+                  					}//selec8
+                  					else
+                      					if(selection1==9)
+                      					{
+                      						
+                      						for(k=0;k<=rcount;++k)
+                      							{
+                      							if(class_type[k].equals("Yoga"))
+                      							    {
+                      								ycount=ycount+1;
+                      								for(i=0;i<=count;++i)
+                      							    	{
+                      									if(class_code[k]==code[i])
+                      										{
+                      							  				yoga_fee=ycount*75;
+                      							  			
+                      										}
+                      									}//i loop
+                      								
+                      							     }//if there is a match on Yoga
+                      							}//k loop
+                      						for(k=0;k<=rcount;++k)
+                  							{
+                  							if(class_type[k].equals("Karate"))
+                  							    {
+                  								kcount=kcount+1;
+                  								for(i=0;i<=count;++i)
+                  							    	{
+                  									if(class_code[k]==code[i])
+                  										{
+                  							  				k_fee=kcount*100;
+                  							  			
+                  										}
+                  									}//i loop
+                  								
+                  							     }//if there is a match on karate
+                  							}//k loop
+                      						for(k=0;k<=rcount;++k)
+                  							{
+                  							if(class_type[k].equals("AerobicsI"))
+                  							    {
+                  								aero1count=aero1count+1;
+                  								for(i=0;i<=count;++i)
+                  							    	{
+                  									if(class_code[k]==code[i])
+                  										{
+                  							  				aero1_fee=aero1count*50;
+                  							  			
+                  										}
+                  									}//i loop
+                  								
+                  							     }//if there is a match on ae1
+                  							}//k loop
+                      						for(k=0;k<=rcount;++k)
+                  							{
+                  							if(class_type[k].equals("AerobicsII"))
+                  							    {
+                  								aero2count=aero2count+1;
+                  								for(i=0;i<=count;++i)
+                  							    	{
+                  									if(class_code[k]==code[i])
+                  										{
+                  							  				aero2_fee=aero2count*55;
+                  							  			
+                  										}
+                  									}//i loop
+                  								
+                  							     }//if there is a match on ae2
+                  							}//k loop
+                      						for(k=0;k<=rcount;++k)
+                  							{
+                  							if(class_type[k].equals("SwimmingI"))
+                  							    {
+                  								swim1count=swim1count+1;
+                  								for(i=0;i<=count;++i)
+                  							    	{
+                  									if(class_code[k]==code[i])
+                  										{
+                  							  				swim1_fee=swim1count*35;
+                  							  			
+                  										}
+                  									}//i loop
+                  									
+                  							     }//if there is a match on swim 1
+                  							}//k loop
+                      						for(k=0;k<=rcount;++k)
+                  							{
+                  							if(class_type[k].equals("SwimmingII"))
+                  							    {
+                  								swim2count=swim2count+1;
+                  								for(i=0;i<=count;++i)
+                  							    	{
+                  									if(class_code[k]==code[i])
+                  										{
+                  							  				swim2_fee=swim2count*40;
+                  							  			
+                  										}
+                  									}//i loop
+                  									
+                  							     }//if there is a match on swimm 2
+                  							}//k loop
+                      						System.out.println("The Total Payment For Yoga is "+yoga_fee);
+                      						System.out.println("The Total Payment For Karate is "+k_fee);
+                      						System.out.println("The Total Payment For Aerobics 1 is "+aero1_fee);
+                      						System.out.println("The Total Payment For Aerobics 2 is "+aero2_fee);
+                      						System.out.println("The Total Payment For is Swimming 1 "+swim1_fee);
+                      						System.out.println("The Total Payment For is Swimming 2 "+swim2_fee);
+                      					}
+      	
+      	 snum = JOptionPane.showInputDialog(null,
+                 Output, "",JOptionPane.QUESTION_MESSAGE);
+        selection1 = Integer.parseInt(snum);
+      }
+}
+  
+  void exit_program()
+  {
+	  try
+      {
+      BufferedWriter member_file = new BufferedWriter(new FileWriter("member.dat"));
+      int i;
+            for (i=0; i<=count; ++i)
+              {
+                member_file.write(code[i] + "#" +name[i] + "#"+type[i] + "#" +age[i] +"#"+gender[i] +"#"+payment[i] +"#");
+                member_file.newLine();
+              }//for loop
+            member_file.close();
+            BufferedWriter register_file = new BufferedWriter(new FileWriter("register.dat"));
+            int k;
+                  for (k=0; k<=count; ++k)
+                    {
+                	  register_file.write(class_code[i] + "#" +class_type[i] + "#");
+                	  register_file.newLine();
+                    }//for loop
+                  register_file.close();
+                
+         }//end try
+        catch (IOException error)
+          {
+            //there was an error on the write to the file
+             System.out.println("Error on file write " + error);
+          }//end error
+    }//end exit_system
+
+  }
