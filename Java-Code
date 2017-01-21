@@ -671,7 +671,7 @@ public class ymca
       }
 }
   
-  void exit_program()
+void exit_program()
   {
 	  try
       {
@@ -685,9 +685,9 @@ public class ymca
             member_file.close();
             BufferedWriter register_file = new BufferedWriter(new FileWriter("register.dat"));
             int k;
-                  for (k=0; k<=count; ++k)
+                  for (k=0; k<=rcount; ++k)
                     {
-                	  register_file.write(class_code[i] + "#" +class_type[i] + "#");
+                	  register_file.write(class_code[k] + "#" +class_type[k] + "#");
                 	  register_file.newLine();
                     }//for loop
                   register_file.close();
